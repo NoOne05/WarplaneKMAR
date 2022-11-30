@@ -20,24 +20,46 @@ public class PlaneController : MonoBehaviour
     // FixedUpdate word elke gefixeerde frame uitgevoerd doormiddel van de frame-rate tijdens de game om de physics beter te behandelen
     void FixedUpdate()
     {
+        Acceleration();
+        LimitSpeed();
+        HandleRotation();
+    }
+
+    void Acceleration()
+    {
         // toetsen om de snelheid te verhogen of verlagen
-        if(Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             speed++;
-        } else if(Input.GetKey(KeyCode.S))
+        }
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
             speed--;
         }
         // altijd force blijven gebruiken zodat  het vliegtuig altijd in beweging blijft
         rb.AddRelativeForce(transform.right * speed * 10f * Time.deltaTime);
+    }
 
+    void LimitSpeed()
+    {
         // snelheid limiteren
-        if(speed >= 100f)
+        if (speed >= 100f)
         {
             speed = 100f;
-        } else if (speed <= 0)
+        }
+        else if (speed <= 0)
         {
             speed = 0f;
+        }
+    }
+
+    void HandleRotation()
+    {
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) {
+            rb.rotation += 5.0f;
+        } else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            rb.rotation -= 5.0f;
         }
     }
 }
