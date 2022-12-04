@@ -5,13 +5,16 @@ using UnityEngine;
 public class PlaneController : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private GameObject groundCheck;
     [SerializeField] private float speed;
+    public float rotateSpeed;
 
     // Awake functie word geroepen voordat het spel word gestart
     void Awake()
     {
         // neem de Rigibody van het vliegtuigobject en geeft het een naam
         rb = gameObject.GetComponent<Rigidbody2D>();
+        groundCheck = transform.GetChild(0).gameObject;
 
         // zet de snelheid op 0
         speed = 0f;
@@ -23,6 +26,7 @@ public class PlaneController : MonoBehaviour
         Acceleration();
         LimitSpeed();
         HandleRotation();
+        LimitRotation();
     }
 
     void Acceleration()
@@ -56,10 +60,26 @@ public class PlaneController : MonoBehaviour
     void HandleRotation()
     {
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) {
-            rb.rotation += 5.0f;
+            rb.rotation += rotateSpeed;
         } else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            rb.rotation -= 5.0f;
+            rb.rotation -= rotateSpeed;
         }
+    }
+
+    void LimitRotation()
+    {
+        if (rb.rotation >= 30f)
+        {
+            rb.SetRotation(30f);
+        } else if (rb.rotation <= -10f)
+        {
+            rb.SetRotation(-10f);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
     }
 }
