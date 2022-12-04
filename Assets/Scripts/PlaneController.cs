@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlaneController : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private GameObject groundCheck;
     [SerializeField] private float speed;
+    [SerializeField] private bool isGrounded;
     public float rotateSpeed;
 
     // Awake functie word geroepen voordat het spel word gestart
@@ -14,7 +14,6 @@ public class PlaneController : MonoBehaviour
     {
         // neem de Rigibody van het vliegtuigobject en geeft het een naam
         rb = gameObject.GetComponent<Rigidbody2D>();
-        groundCheck = transform.GetChild(0).gameObject;
 
         // zet de snelheid op 0
         speed = 0f;
@@ -27,6 +26,8 @@ public class PlaneController : MonoBehaviour
         LimitSpeed();
         HandleRotation();
         LimitRotation();
+
+        HandleDropping();
     }
 
     void Acceleration()
@@ -59,18 +60,38 @@ public class PlaneController : MonoBehaviour
 
     void HandleRotation()
     {
+        // als de linkerpijltoets of A word ingedrukt voert de volgende code uit
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) {
-            rb.rotation += rotateSpeed;
-        } else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            // check of het vliegtuig op de grond is
+            if(isGrounded)
+            {
+                // als het vliegtuig contact maakt met de grond verhoogt de snelheid van rotatie om te helpen opstijgen
+                rb.rotation += rotateSpeed + 4;
+            } else
+            {
+                // als het vliegtuig niet in contact is met de grond behoud hij de normale rotatie snelheid
+                rb.rotation += rotateSpeed;
+            }
+
+        // als de rechterpijltoets of D word ingedrukt voert de volgende code uit 
+        }
+        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            rb.rotation -= rotateSpeed;
+            // check of het vliegtuig van de grond af is
+            if (!isGrounded)
+            {
+                // het vliegtuig mag alleen deze kant op roteren als hij van de grond af is.
+                rb.rotation -= rotateSpeed;
+            }
         }
     }
 
     void LimitRotation()
     {
+        // als het vliegtuig een bepaalde rotatie heeft of verder is dan die rotatie
         if (rb.rotation >= 30f)
         {
+            // ressetten naar gespecificeerde rotatie
             rb.SetRotation(30f);
         } else if (rb.rotation <= -10f)
         {
@@ -78,8 +99,30 @@ public class PlaneController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void HandleDropping()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        // als het vliegtuig in contact is met een object met de "Ground tag"
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            // zet de boolean "isGrounded" of waar
+            isGrounded = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        // als het vliegtuig van contact af gaat met een object met de "Ground tag"
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            // zet de boolean "isGrounded" of vals
+            isGrounded = false;
+        }
     }
 }
