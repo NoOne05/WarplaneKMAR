@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlaneController : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private float speed;
     [SerializeField] private bool isGrounded;
     [SerializeField] private LineRenderer predictLine;
+    public float speed;
     public float rotateSpeed;
     public GameObject bomb;
 

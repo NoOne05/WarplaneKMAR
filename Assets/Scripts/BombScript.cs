@@ -12,6 +12,10 @@ public class BombScript : MonoBehaviour
 
         // Neem de rigibody van de bom en geef het een kracht in de directie die is aangegeven
         GetComponent<Rigidbody2D>().AddForce(direction * 20f, ForceMode2D.Impulse);
+    }
 
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        Destroy(gameObject);
     }
 }

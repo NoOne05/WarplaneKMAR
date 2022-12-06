@@ -32,7 +32,7 @@ public class PredictionScript : MonoBehaviour
         startPoint = plane.transform.position;
 
         // het eindpunt van de lijn ophalen (de positie van het vliegtuig zodat de lijn het vlieguig volgt maar dan richting de grond
-        endPoint = new Vector2(startPoint.x + 14, startPoint.y - 20);
+        endPoint = new Vector2(startPoint.x + 28, startPoint.y - 40);
 
         // het startpunt plaatsen van de lijn
         line.SetPosition(0, startPoint);
