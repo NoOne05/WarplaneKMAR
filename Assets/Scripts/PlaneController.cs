@@ -42,6 +42,8 @@ public class PlaneController : MonoBehaviour
     {
         // Handledropping zit in update omdat deze niet gebasseerd word door physics en altijd uitgevoerd moet worden
         HandleDropping();
+
+        HandleQuitting();
     }
 
     // functie voor de controle van de snelheid
@@ -56,7 +58,7 @@ public class PlaneController : MonoBehaviour
         {
             speed--;
         }
-        // altijd force blijven gebruiken zodat  het vliegtuig altijd in beweging blijft
+        // altijd force blijven gebruiken zodat het vliegtuig altijd in beweging blijft
         rb.AddRelativeForce(10f * speed * Time.deltaTime * transform.right);
     }
 
@@ -136,6 +138,17 @@ public class PlaneController : MonoBehaviour
         {
             // maak en plaats de prefab van een bom onder het vliegtuigje;
             Instantiate(bomb, new Vector2(rb.transform.position.x, rb.transform.position.y - 1), Quaternion.identity);
+        }
+    }
+
+    // functie voor het afsluiten van de applicatie
+    void HandleQuitting()
+    {
+        // als de escape knop word ingedrukt
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Applicatie sluiten
+            Application.Quit();
         }
     }
 
